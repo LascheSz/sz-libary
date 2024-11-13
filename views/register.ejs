@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Register</h1>
-    <form>
+    <form id="registerForm"> <!-- Hier das id-Attribut hinzufügen -->
         <div class="error" style="background-color: red;"></div><br>
         <label for="username">Username</label><br>
         <input type="text" id="username" required><br>
@@ -15,48 +15,48 @@
         <input type="password" id="password" required><br>
         <input type="submit" value="register"><br>
     </form>
-    <a href="/login">Already Register? Login!</a>
-
-<script>
-    document.getElementById("registerForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-        // Form-Daten erfassen
-        const formData = new FormData(this);
-        const data = {
-            username: formData.get("username"),
-            password: formData.get("password")
-        };
-        
-        try {
-            // POST-Request an den Server
-            const response = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
+    <a href="/login">Already Registered? Login!</a>
+    
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
             
-            const result = await response.json();
+            // Form-Daten erfassen
+            const formData = new FormData(this);
+            const data = {
+                username: formData.get("username"),
+                password: formData.get("password")
+            };
             
-            // Überprüfen, ob die Registrierung erfolgreich war
-            if (response.status === 201) {
-                // Weiterleitung basierend auf der Rolle
-                if (result.role === "admin") {
-                    window.location.href = "/admin";
-                } else if (result.role === "user") {
-                    window.location.href = "/basic";
+            try {
+                // POST-Request an den Server
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                // Überprüfen, ob die Registrierung erfolgreich war
+                if (response.status === 201) {
+                    // Weiterleitung basierend auf der Rolle
+                    if (result.role === "admin") {
+                        window.location.href = "/admin";
+                    } else if (result.role === "user") {
+                        window.location.href = "/basic";
+                    }
+                } else {
+                    // Fehlerbehandlung anzeigen, wenn die Registrierung fehlschlägt
+                    alert(result.message || "Registrierung fehlgeschlagen");
                 }
-            } else {
-                // Fehlerbehandlung anzeigen, wenn die Registrierung fehlschlägt
-                alert(result.message || "Registrierung fehlgeschlagen");
+            } catch (error) {
+                console.error("Fehler bei der Registrierung:", error);
+                alert("Ein Fehler ist aufgetreten.");
             }
-        } catch (error) {
-            console.error("Fehler bei der Registrierung:", error);
-            alert("Ein Fehler ist aufgetreten.");
-        }
-    });
-</script>
+        });
+    </script>    
 </body>
 </html>
