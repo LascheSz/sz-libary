@@ -18,39 +18,45 @@
     <a href="/login">Already Register? Login!</a>
 
 <script>
-    const form = document.querySelector("form"),
-    username = document.querySelector("#username"),
-    password = document.querySelector("#password"),
-    display = document.querySelector(".error");
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        display.textContent = "";
-
+    document.getElementById("registerForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        // Form-Daten erfassen
+        const formData = new FormData(this);
+        const data = {
+            username: formData.get("username"),
+            password: formData.get("password")
+        };
+        
         try {
-            const res = await fetch('./api/auth/register', {
-                method: 'POST',
-                body: JSON.stringify({ username: username.value, password: password.value }),
-                headers: { 'Content-Type': 'application/json' }
+            // POST-Request an den Server
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
             });
-            const data = await res.json();
-
-            if (res.status === 400 || res.status === 401) {
-                return display.textContent = `${data.message}. ${data.error ? data.error : ''}`;
-            }
-
-            console.log("Benutzerrolle:", data.role);
-
-            if (data.role === "admin") {
-                location.assign('/admin');
+            
+            const result = await response.json();
+            
+            // Überprüfen, ob die Registrierung erfolgreich war
+            if (response.status === 201) {
+                // Weiterleitung basierend auf der Rolle
+                if (result.role === "admin") {
+                    window.location.href = "/admin";
+                } else if (result.role === "user") {
+                    window.location.href = "/basic";
+                }
             } else {
-                location.assign('/basic');
+                // Fehlerbehandlung anzeigen, wenn die Registrierung fehlschlägt
+                alert(result.message || "Registrierung fehlgeschlagen");
             }
-        } catch (e) {
-            console.log(e.message);
+        } catch (error) {
+            console.error("Fehler bei der Registrierung:", error);
+            alert("Ein Fehler ist aufgetreten.");
         }
     });
 </script>
-
 </body>
 </html>
