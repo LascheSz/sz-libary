@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Register</h1>
-    <form id="registerForm"> <!-- Hier das id-Attribut hinzufügen -->
+    <form id="registerForm"> <!-- id-Attribut hinzugefügt -->
         <div class="error" style="background-color: red;"></div><br>
         <label for="username">Username</label><br>
         <input type="text" id="username" required><br>
@@ -16,6 +16,9 @@
         <input type="submit" value="register"><br>
     </form>
     <a href="/login">Already Registered? Login!</a>
+    
+    <!-- Hier wird die Rolle für Debugging-Zwecke angezeigt -->
+    <div id="roleDebug" style="margin-top: 20px; font-weight: bold; color: blue;"></div>
     
     <script>
         document.getElementById("registerForm").addEventListener("submit", async function(event) {
@@ -40,23 +43,30 @@
                 
                 const result = await response.json();
                 
-                // Überprüfen, ob die Registrierung erfolgreich war
-                if (response.status === 201) {
-                    // Weiterleitung basierend auf der Rolle
-                    if (result.role === "admin") {
-                        window.location.href = "/admin";
-                    } else if (result.role === "user") {
-                        window.location.href = "/basic";
+                // Rolle des Benutzers in der Konsole ausgeben
+                console.log("Rolle des Benutzers:", result.role);
+                
+                // Rolle auf der Seite anzeigen
+                document.getElementById("roleDebug").innerText = "Empfangene Rolle: " + result.role;
+    
+                // 3 Sekunden Verzögerung vor der Weiterleitung, um die Nachricht zu sehen
+                setTimeout(() => {
+                    if (response.status === 201) {
+                        if (result.role === "admin") {
+                            window.location.href = "/admin";
+                        } else {
+                            window.location.href = "/basic";
+                        }
+                    } else {
+                        alert(result.message || "Registrierung fehlgeschlagen");
                     }
-                } else {
-                    // Fehlerbehandlung anzeigen, wenn die Registrierung fehlschlägt
-                    alert(result.message || "Registrierung fehlgeschlagen");
-                }
+                }, 3000); // 3 Sekunden Verzögerung
             } catch (error) {
                 console.error("Fehler bei der Registrierung:", error);
                 alert("Ein Fehler ist aufgetreten.");
             }
         });
-    </script>    
+    </script>
+    
 </body>
 </html>

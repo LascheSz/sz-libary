@@ -7,11 +7,16 @@ const express = require('express'),
     PORT = process.env.PORT || 3000,
     connectDB = require('./config/database.js'),
     cookieParser = require('cookie-parser'),
-    { roleAuth } = require('./middleware/auth.js')
+    { roleAuth } = require('./middleware/auth.js'),
+    cors = require('cors');
 
 // Middleware einrichten
 app.use(cookieParser());
 app.use(express.json());
+app.use(cors({
+    origin: `http://localhost:${PORT}`, // Erlauben Sie Anfragen von diesem Ursprung
+    credentials: true // Erlauben Sie das Senden von Cookies
+}));
 
 // Datenbankverbindung herstellen
 connectDB();
@@ -51,6 +56,7 @@ const Server = app.listen(PORT, () => {
 // Fehlerbehandlung für unhandled Rejections
 process.on('unhandledRejection', e => {
     console.log("Fehler aufgetreten: " + e.message);
+    console.error(e);
     Server.close(() => {
         process.exit(1);
     });
