@@ -1,0 +1,50 @@
+Projekt erstellen
+-> Pfad auswählen bsp. cd user/el/xampp/htdocs
+-> command eingeben composer create-project symfony/Skeleton [name]
+
+
+Require
+
+composer req make
+composer req twig // Template Engine
+composer req doctrine/annotations //Annotations (route)
+composer req doctrine (Datenbank)
+composer req security
+
+Controller erstellen
+php bin/console make:controller [name]
+
+Entity erstellen
+php bin/console make:entity [name]
+
+Form erstellen
+php bin/console make:form [name]
+
+Auth
+php bin/console make:user
+php bin/console make:auth
+security.yaml -> algorithm: Auto / argon2i / bcrypt
+Access Controll in security.yaml unter access_controll
+
+
+Symfony Server start (symfony.com/download Symfony CLI)
+symfony server:start
+symfony server:ca:install
+alternative php -S localhost:8000 -t public
+
+Datenbank config
+.env = DATABASE_URL eintragen
+php bin/console doctrine:database:create
+
+
+Daenband Befehle
+php bin/console doctrine:schema:update --force
+ALTERNATIVE
+php bin/console make:migration -> migrations Datei wird erstellt
+php bin/console doctrine:migrations:migrate
+
+
+----HINWEISE----
+Alle Templates greifen auf die Base.twig.html zu
+
+
