@@ -37,7 +37,7 @@ Datenbank config
 php bin/console doctrine:database:create
 
 
-Daenband Befehle
+Datenband Befehle
 php bin/console doctrine:schema:update --force
 ALTERNATIVE
 php bin/console make:migration -> migrations Datei wird erstellt
