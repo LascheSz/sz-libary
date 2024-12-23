@@ -22,7 +22,9 @@
                 </div>
                 {{ form_start(StueckeTypeForm) }}
                 <div class="modal-body">
+                    <div class="container">
                     {{ form_widget(StueckeTypeForm) }}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
@@ -33,13 +35,49 @@
         </div>
     </div>
     <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Bestell Nr.</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Kategorie</th>
+                <th>Preis</th>
+                <th>Löschen</th>
+                <th>><div class="hero-buttons" style="text-align:right">
+                        <div class="btn btn-primary me-0 me-sm-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Stück Hinzufügen
+                        </div>
+                        </div>>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for stueck in stuecke %}
+                <tr>
+                    <td>{{ stueck.id }}</td>
+                    {# <td><a href="{{ path('gericht.show', {id: gericht.id}) }}">{{ gericht.name }}</a></td> #}
+                    <td>{{ stueck.name }}</td>
+                    <td>{{ stueck.stueckart }}</td>
+                    <td>{{ stueck.anschaffungsdatum }}</td>
+                    <td>{{ stueck.jugendzug_stueck }}</td>
+                    <td>{{ stueck.interpreter_id }}</td>
+                    <td>{{ stueck.interpreter_id }}</td>
+                    {# td class="remove"><a href="{{ path('gericht.delete', {id: gericht.id}) }}"><button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button></a></td> #}
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_liste_index') }}">back to list</a>
     
 
 
 
 
 
-    
+
 
 
 

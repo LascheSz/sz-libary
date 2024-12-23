@@ -6,6 +6,7 @@ use App\Entity\Bearbeiter;
 use App\Entity\Interpreter;
 use App\Entity\Stuecke;
 use App\Form\StueckeType;
+use App\Repository\StueckeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,6 +71,17 @@ class LibaryController extends AbstractController
             'stuecke' => $alleStuecke,
             'controller_name' => 'LibaryController'
         ]);
+    }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete(Request $request, EntityManagerInterface $entityManager,$id, StueckeRepository $stueck) {
+        $gericht = $stueck->find($id);
+        $entityManager->remove($stueck);
+        $entityManager->flush();
+
+        //message
+        $this->addFlash('success', 'Stück wurde gelöscht');
+        return $this->redirect($this->generateURL('gericht.bearbeiten'));
     }
 
     #[Route('/interpreter/autocomplete', name: 'interpreter_autocomplete')]
