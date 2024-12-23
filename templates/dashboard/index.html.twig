@@ -1,20 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+  <section id="services" class="services section light-background">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row g-4">
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200" onclick="window.location.href='/libary';">
+              <div class="service-card d-flex">
+                <div class="icon flex-shrink-0">
+                  <i class="bi bi-diagram-3"></i>
+                </div>
+                <div>
+                  <h3>Stücke</h3>
+                  <p>Entdecke unsere umfangreiche Sammlung an Stücken.</p>
+                  <a href="/libary" class="read-more">Hier lang<i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div><!-- End Service Card -->
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400" onclick="window.location.href='/musikheim';">
+            <div class="service-card d-flex">
+              <div class="icon flex-shrink-0">
+                <i class="bi bi-clipboard-data"></i>
+              </div>
+              <div>
+                <h3>Musikheim Planung</h3>
+                <p>Behalte alle Termine und Aktivitäten im Musikheim im Blick.<br>
+                  Füge neue Termine hinzu oder passe bestehende an!</p>
+                <a href="/libary" class="read-more">comming soon<i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div><!-- End Service Card -->
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/em/xampp/htdocs/sz-libary/src/Controller/DashboardController.php</code></li>
-        <li>Your template at <code>C:/Users/em/xampp/htdocs/sz-libary/templates/dashboard/index.html.twig</code></li>
-    </ul>
-</div>
+      </div>
+    </div>
+  </section><!-- /Services Section -->
 {% endblock %}

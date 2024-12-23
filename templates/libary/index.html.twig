@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LibaryController!{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+    <div class="hero-buttons" style="text-align:right">
+        <div class="btn btn-primary me-0 me-sm-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Stück Hinzufügen
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Stück hinzufügen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {{ form_start(StueckeTypeForm) }}
+                <div class="modal-body">
+                    {{ form_widget(StueckeTypeForm) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                    <button type="submit" class="btn btn-primary">Speichern</button>
+                </div>
+                {{ form_end(StueckeTypeForm) }}
+            </div>
+        </div>
+    </div>
+    <br>
+    
+
+
+
+
+
+    
+
+
+
+    <script>
+    $(document).ready(function() {
+    function setupAutocomplete(inputSelector, url) {
+        $(inputSelector).autocomplete({
+            source: function(request, response) {
+                console.log('Searching for:', request.term); // Debug-Log
+                $.ajax({
+                    url: url,
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        console.log('Received data:', data); // Debug-Log
+                        response(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Ajax error:', error); // Debug-Log
+                    }
+                });
+            },
+            minLength: 1, // Auf 1 reduziert für früheres Feedback
+            select: function(event, ui) {
+                console.log('Selected:', ui.item); // Debug-Log
+                $(this).val(ui.item.value);
+                return false;
+            },
+            open: function() {
+                $(this).autocomplete('widget').css('z-index', 99999);
+                return false;
+            }
+        }).autocomplete("instance")._renderItem = function(ul, item) {
+            return $("<li>")
+                .append("<div>" + item.label + "</div>")
+                .appendTo(ul);
+        };
+    }
+
+    // Initialisierung mit Logging
+    console.log('Setting up autocomplete...'); // Debug-Log
+    setupAutocomplete(".interpreter-autocomplete", "{{ path('interpreter_autocomplete') }}");
+    setupAutocomplete(".bearbeiter-autocomplete", "{{ path('bearbeiter_autocomplete') }}");
+    });
+</script>
+{% endblock %}

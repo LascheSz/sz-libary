@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\BearbeiterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity(repositoryClass: BearbeiterRepository::class)]
+#[ORM\Entity]
 class Bearbeiter
 {
     #[ORM\Id]
@@ -14,22 +15,29 @@ class Bearbeiter
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $bearbeiter_name = null;
+    private ?string $name = null;
+
+    #[ORM\OneToMany(mappedBy: 'bearbeiter', targetEntity: Stuecke::class)]
+    private Collection $stuecke;
+
+    public function __construct()
+    {
+        $this->stuecke = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBearbeiterName(): ?string
+    public function getName(): ?string
     {
-        return $this->bearbeiter_name;
+        return $this->name;
     }
 
-    public function setBearbeiterName(string $bearbeiter_name): static
+    public function setName(?string $name): self
     {
-        $this->bearbeiter_name = $bearbeiter_name;
-
+        $this->name = $name;
         return $this;
     }
 }

@@ -16,28 +16,21 @@ class BearbeiterRepository extends ServiceEntityRepository
         parent::__construct($registry, Bearbeiter::class);
     }
 
-    //    /**
-    //     * @return Bearbeiter[] Returns an array of Bearbeiter objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByName(string $name): ?Bearbeiter
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.bearbeiter_name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Bearbeiter
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findByTerm(string $term): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.bearbeiter_name LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -16,28 +16,21 @@ class InterpreterRepository extends ServiceEntityRepository
         parent::__construct($registry, Interpreter::class);
     }
 
-    //    /**
-    //     * @return Interpreter[] Returns an array of Interpreter objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByName(string $name): ?Interpreter
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.interpreter_name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Interpreter
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findByTerm(string $term): array
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.interpreter_name LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\StueckeRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: StueckeRepository::class)]
+#[ORM\Entity]
 class Stuecke
 {
+    public const STUECK_ART = [
+        'Musical',
+        'Operette',
+        'Oper'
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -19,28 +23,22 @@ class Stuecke
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?bool $stueck_art = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $stueck_art = null;
 
-    #[ORM\Column]
-    private ?bool $jugenzug_stueck = null;
+    #[ORM\Column(type: 'boolean')]
+    private bool $jugendzug_stueck = false;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $anschaffungsdatum = null;
 
-    #[ORM\Column]
-    private ?int $interpreter_id = null;
+    #[ORM\ManyToOne(targetEntity: Interpreter::class, inversedBy: 'stuecke')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Interpreter $interpreter = null;
 
-    #[ORM\Column]
-    private ?int $bearbeiter_id = null;
-
-    #[ORM\OneToMany(mappedBy: 'stueck', targetEntity: StueckStimme::class)]
-    private Collection $stueckStimmen;
-
-    public function __construct()
-    {
-        $this->stueckStimmen = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Bearbeiter::class, inversedBy: 'stuecke')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Bearbeiter $bearbeiter = null;
 
     public function getId(): ?int
     {
@@ -52,34 +50,31 @@ class Stuecke
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function isStueckArt(): ?bool
+    public function getStueckArt(): ?string
     {
         return $this->stueck_art;
     }
 
-    public function setStueckArt(bool $stueck_art): static
+    public function setStueckArt(?string $stueck_art): self
     {
         $this->stueck_art = $stueck_art;
-
         return $this;
     }
 
-    public function isJugenzugStueck(): ?bool
+    public function isJugendzugStueck(): bool
     {
-        return $this->jugenzug_stueck;
+        return $this->jugendzug_stueck;
     }
 
-    public function setJugenzugStueck(bool $jugenzug_stueck): static
+    public function setJugendzugStueck(bool $jugendzug_stueck): self
     {
-        $this->jugenzug_stueck = $jugenzug_stueck;
-
+        $this->jugendzug_stueck = $jugendzug_stueck;
         return $this;
     }
 
@@ -88,39 +83,31 @@ class Stuecke
         return $this->anschaffungsdatum;
     }
 
-    public function setAnschaffungsdatum(\DateTimeInterface $anschaffungsdatum): static
+    public function setAnschaffungsdatum(?\DateTimeInterface $anschaffungsdatum): self
     {
         $this->anschaffungsdatum = $anschaffungsdatum;
-
         return $this;
     }
 
-    public function getInterpreterId(): ?int
+    public function getInterpreter(): ?Interpreter
     {
-        return $this->interpreter_id;
+        return $this->interpreter;
     }
 
-    public function setInterpreterId(int $interpreter_id): static
+    public function setInterpreter(?Interpreter $interpreter): self
     {
-        $this->interpreter_id = $interpreter_id;
-
+        $this->interpreter = $interpreter;
         return $this;
     }
 
-    public function getBearbeiterId(): ?int
+    public function getBearbeiter(): ?Bearbeiter
     {
-        return $this->bearbeiter_id;
+        return $this->bearbeiter;
     }
 
-    public function setBearbeiterId(int $bearbeiter_id): static
+    public function setBearbeiter(?Bearbeiter $bearbeiter): self
     {
-        $this->bearbeiter_id = $bearbeiter_id;
-
+        $this->bearbeiter = $bearbeiter;
         return $this;
-    }
-
-    public function getStueckStimmen(): Collection
-    {
-        return $this->stueckStimmen;
     }
 }

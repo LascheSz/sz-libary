@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\InterpreterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity(repositoryClass: InterpreterRepository::class)]
+#[ORM\Entity]
 class Interpreter
 {
     #[ORM\Id]
@@ -14,22 +15,29 @@ class Interpreter
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $interpreter_name = null;
+    private ?string $name = null;
+
+    #[ORM\OneToMany(mappedBy: 'interpreter', targetEntity: Stuecke::class)]
+    private Collection $stuecke;
+
+    public function __construct()
+    {
+        $this->stuecke = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInterpreterName(): ?string
+    public function getName(): ?string
     {
-        return $this->interpreter_name;
+        return $this->name;
     }
 
-    public function setInterpreterName(string $interpreter_name): static
+    public function setName(?string $name): self
     {
-        $this->interpreter_name = $interpreter_name;
-
+        $this->name = $name;
         return $this;
     }
 }
