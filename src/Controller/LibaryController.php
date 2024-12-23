@@ -94,18 +94,18 @@ class LibaryController extends AbstractController
         $suggestions = [];
         foreach ($interpreters as $interpreter) {
             $suggestions[] = [
-                'label' => $interpreter->getName() . ' (bereits vorhanden)',
+                'label' => $interpreter->getName(),
                 'value' => $interpreter->getName()
             ];
         }
 
         // Wenn keine Vorschläge gefunden wurden
-        // if (empty($suggestions)) {
-        //     $suggestions[] = [
-        //         'label' => 'Neuer Eintrag: "' . $term . '"',
-        //         'value' => $term
-        //     ];
-        // }
+        if (empty($suggestions)) {
+            $suggestions[] = [
+                'label' => 'Neuer Eintrag: "' . $term . '"',
+                'value' => $term
+            ];
+        }
 
         // Debug-Log
         error_log('Returning suggestions: ' . json_encode($suggestions));
