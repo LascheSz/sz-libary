@@ -72,6 +72,65 @@ class LibaryController extends AbstractController
             'controller_name' => 'LibaryController'
         ]);
     }
+    #[Route('/update/{id}', name: 'update')]
+    public function update(Request $request, EntityManagerInterface $entityManager, $id, StueckeRepository $stueckeRepository): Response
+    {
+        $stuecke = $stueckeRepository->find($id);
+        if (!$stuecke) {
+            throw $this->createNotFoundException('Das Stück wurde nicht gefunden.');
+        }
+
+        $form = $this->createForm(StueckeType::class, $stuecke);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Interpreter verarbeiten
+            $interpreterName = $form->get('interpreter_name')->getData();
+            if ($interpreterName) {
+                $interpreter = $entityManager->getRepository(Interpreter::class)
+                    ->findOneBy(['name' => $interpreterName]);
+                
+                if (!$interpreter) {
+                    // Neuen Interpreter erstellen
+                    $interpreter = new Interpreter();
+                    $interpreter->setName($interpreterName);
+                    $entityManager->persist($interpreter);
+                }
+                // Interpreter mit Stück verknüpfen
+                $stuecke->setInterpreter($interpreter);
+            }
+
+            // Bearbeiter verarbeiten
+            $bearbeiterName = $form->get('bearbeiter_name')->getData();
+            if ($bearbeiterName) {
+                $bearbeiter = $entityManager->getRepository(Bearbeiter::class)
+                    ->findOneBy(['name' => $bearbeiterName]);
+                
+                if (!$bearbeiter) {
+                    // Neuen Bearbeiter erstellen
+                    $bearbeiter = new Bearbeiter();
+                    $bearbeiter->setName($bearbeiterName);
+                    $entityManager->persist($bearbeiter);
+                }
+                // Bearbeiter mit Stück verknüpfen
+                $stuecke->setBearbeiter($bearbeiter);
+            }
+
+            $entityManager->persist($stuecke);
+            $entityManager->flush();
+
+            // Erfolgsnachricht
+            $this->addFlash('success', 'Stück wurde bearbeitet');
+
+            return $this->redirectToRoute('app_libary');
+        }
+
+        return $this->render('libary/update.html.twig', [
+            'StueckeUpdateType' => $form->createView(),
+            'controller_name' => 'LibaryController'
+        ]);
+    }
+
 
     #[Route('/delete/{id}', name: 'delete')]
     public function delete(Request $request, EntityManagerInterface $entityManager,$id, StueckeRepository $stueck) {

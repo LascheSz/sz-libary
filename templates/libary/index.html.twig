@@ -7,12 +7,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     
-    <div class="hero-buttons" style="text-align:right">
-        <div class="btn btn-primary me-0 me-sm-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Stück Hinzufügen
-        </div>
-    </div>
-
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -35,42 +29,66 @@
         </div>
     </div>
     <br>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Bestell Nr.</th>
-                <th>Name</th>
-                <th>Beschreibung</th>
-                <th>Kategorie</th>
-                <th>Preis</th>
-                <th>Löschen</th>
-                <th>><div class="hero-buttons" style="text-align:right">
-                        <div class="btn btn-primary me-0 me-sm-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Stück Hinzufügen
-                        </div>
-                        </div>>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for stueck in stuecke %}
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>{{ stueck.id }}</td>
-                    {# <td><a href="{{ path('gericht.show', {id: gericht.id}) }}">{{ gericht.name }}</a></td> #}
-                    <td>{{ stueck.name }}</td>
-                    <td>{{ stueck.stueckart }}</td>
-                    <td>{{ stueck.anschaffungsdatum }}</td>
-                    <td>{{ stueck.jugendzug_stueck }}</td>
-                    <td>{{ stueck.interpreter_id }}</td>
-                    <td>{{ stueck.interpreter_id }}</td>
-                    {# td class="remove"><a href="{{ path('gericht.delete', {id: gericht.id}) }}"><button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button></a></td> #}
-                    <td></td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Beschreibung</th>
+                    <th>Kategorie</th>
+                    <th>Jugendzug Stück</th>
+                    <th>Interpreter</th>
+                    <th>Bearbeitet von</th>
+                    <th><div class="hero-buttons" style="text-align:right">
+                            <div class="btn btn-primary me-0 me-sm-2 mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Stück Hinzufügen
+                            </div>
+                        </div>
+                    </th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_liste_index') }}">back to list</a>
+            </thead>
+            <tbody>
+                {%for stueck in stuecke %}
+                    <tr>
+                        <td>{{ stueck.id }}</td>
+                        <td>{{ stueck.name }}</td>
+                        <td>{{ stueck.stueckart }}</td>
+                        <td>{{ stueck.anschaffungsdatum|date('d.m.Y') }}</td>
+                        <td>{{ stueck.isJugendzugStueck ? 'Ja' : 'Nein' }}</td>
+                        <td>{{ stueck.interpreter ? stueck.interpreter.name : '' }}</td>
+                        <td>{{ stueck.bearbeiter ? stueck.bearbeiter.name : '' }}</td>
+                        <td class="update">
+                            <button class="btn btn-warning btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target="#updateModal-{{ stueck.id }}" title="Update">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <div class="modal fade" id="updateModal-{{ stueck.id }}" tabindex="-1" aria-labelledby="updateModalLabel-{{ stueck.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="updateModalLabel-{{ stueck.id }}">Stück bearbeiten</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        {{ form_start(StueckeUpdateType[stueck.id]) }}
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                {{ form_widget(updateForm[stueck.id]) }}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                                            <button type="submit" class="btn btn-primary">Speichern</button>
+                                        </div>
+                                        {{ form_end(StueckeUpdateType[stueck.id]) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
 
 
